@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "R49CES4ruzZUVGlruzYbQpi/bYfXRfPMZs+XbKPi9SFy9YEqSSv5l+J+xW+3w1kwMaL4iwdmQALam5eT3qmrVQ==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Acer\\RiderProjects\\WebApplication1\\VkSuggestApi.Application\\VkSuggestApi.Application.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Acer\\.nuget\\packages\\polly\\7.2.3\\polly.7.2.3.nupkg.sha512"
+  ],
+  "logs": []
+}
