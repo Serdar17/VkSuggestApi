@@ -2,7 +2,7 @@
 
 namespace WebApplication1.Dto;
 
-public class SuccessResponseDto : BaseResponseDto
+public class SuggestResponse : BaseResponseDto
 {
     /// <summary>
     /// Строка запроса

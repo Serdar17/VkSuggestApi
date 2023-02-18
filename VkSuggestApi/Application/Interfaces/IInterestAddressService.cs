@@ -3,7 +3,7 @@ using WebApplication1.Queries;
 
 namespace WebApplication1.Application.Interfaces;
 
-public interface IVkApiService<T>
+public interface IInterestAddressService
 {
-    public Task<T> GetSuggestIngoAsync(GetSuggestQuery query);
+    public Task<BaseResponseDto> SuggestAsync(GetSuggestQuery query);
 }

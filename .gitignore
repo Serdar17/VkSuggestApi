@@ -1,3 +1,5 @@
 ﻿.idea
 VkSuggestApi/bin
 VkSuggestApi/obj
+VkSuggestApi.IntegrationTests/bin
+VkSuggestApi.IntegrationTests/obj

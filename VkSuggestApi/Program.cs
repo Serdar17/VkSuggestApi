@@ -1,9 +1,11 @@
 using MediatR;
-using WebApplication1;
+using Serilog;
+using Serilog.Events;
 using WebApplication1.Application.Interfaces;
-using WebApplication1.Dto;
+using WebApplication1.Infrastructure.Services;
+using WebApplication1.Infrastructure.VkMaps.Client;
+using WebApplication1.Infrastructure.VkMaps.Services;
 using WebApplication1.Options;
-using WebApplication1.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,20 +14,34 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers(); 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddTransient<IVkApiService<BaseResponseDto>, VkApiService>();
-var options = builder.Configuration.GetSection(nameof(VkApiOption))
-    .Get<VkApiOption>();
 
-builder.Services.AddHttpClient<IVkApiClient, VkApiClient>(config =>
-{
-    config.BaseAddress = new Uri(options.BaseAddress);
-    config.DefaultRequestHeaders.Clear();
-})
+builder.Services.AddScoped<IInterestAddressService, InterestAddressService>();
+builder.Services.AddScoped<ISearchGeocodingVkMapsService, SearchGeocodingVkMapsService>();
+
+builder.Services.Configure<VkApiSetting>(builder.Configuration.GetSection(VkApiSetting.Section));
+builder.Services.AddHttpClient<ISearchGeocodingVkMapsClient, SearchGeocodingVkMapsClient>()
     .SetHandlerLifetime(TimeSpan.FromMinutes(5))
     .AddPolicyHandler(RetryPolicy.GetRetryPolicy());
 
+builder.Services.Decorate<ISearchGeocodingVkMapsClient, CachedSearchGeocodingVkMapsClient>();
+
 builder.Services.AddMediatR(typeof(Program));
 builder.Services.AddMemoryCache();
+
+builder.Host.UseSerilog((cts, lc) => 
+    lc
+        .Enrich.FromLogContext()
+        .WriteTo.Console(
+            LogEventLevel.Information,
+            outputTemplate:
+            "{Timestamp:HH:mm:ss:ms} LEVEL:[{Level}]| THREAD:|{ThreadId}| Source: |{Source}| {Message}{NewLine}{Exception}"));
+
+// var logger = new LoggerConfiguration()
+//     .ReadFrom.Configuration(builder.Configuration)
+//     .CreateLogger();
+//
+// builder.Logging.ClearProviders();
+// builder.Logging.AddSerilog(logger);
 
 var app = builder.Build();
 
@@ -36,6 +52,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseSerilogRequestLogging();
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
@@ -43,3 +61,5 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+public partial class Program { }

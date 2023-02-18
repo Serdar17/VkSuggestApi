@@ -13,20 +13,20 @@ public class GetSuggestQuery : IRequest<BaseResponseDto>
     public int Limit { get; set; } = 5;
     
     [FromQuery]
-    public string? Location { get; set; }
+    public string Location { get; set; }
 }
 
 public class GetSuggestQueryHandler : IRequestHandler<GetSuggestQuery, BaseResponseDto>
 {
-    private readonly IVkApiService<BaseResponseDto> _service;
+    private readonly IInterestAddressService _service;
 
-    public GetSuggestQueryHandler(IVkApiService<BaseResponseDto> service)
+    public GetSuggestQueryHandler(IInterestAddressService service)
     {
         _service = service;
     }
     
     public async Task<BaseResponseDto> Handle(GetSuggestQuery request, CancellationToken cancellationToken)
     {
-        return await _service.GetSuggestIngoAsync(request);
+        return await _service.SuggestAsync(request);
     }
 }
