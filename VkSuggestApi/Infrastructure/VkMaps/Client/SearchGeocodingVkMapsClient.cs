@@ -26,22 +26,24 @@ public class SearchGeocodingVkMapsClient : ISearchGeocodingVkMapsClient
         return httpResponseMessage;
     }
 
-    public async Task<HttpResponseMessage> PlacesAsync(string[] fields, string location, string locationName, int limit)
+    public async Task<HttpResponseMessage> PlacesAsync(string[] fields, double lat, double lon, string locationName, int limit)
     {
         var uriBuilder = new UriBuilder($"{_apiSetting.BaseUrl}/places");
-        var parameters = GetNameValueCollectionByParameters(fields, location, limit);
-        parameters.Add("location", locationName);
+        var parameters = GetNameValueCollectionByParameters(fields, locationName, limit);
+        if (lat != 0 || lon != 0)
+            parameters.Add("location", $"{lat},{lon}");
         uriBuilder.Query = parameters.ToString();
         var request = new HttpRequestMessage(HttpMethod.Get, uriBuilder.Uri);
         var httpResponseMessage = await _httpClient.SendAsync(request);
         return httpResponseMessage;
     }
 
-    public async Task<HttpResponseMessage> SearchAsync(string[] fields, string location, string locationName, int limit)
+    public async Task<HttpResponseMessage> SearchAsync(string[] fields, double lat, double lon, string locationName, int limit)
     {
         var uriBuilder = new UriBuilder($"{_apiSetting.BaseUrl}/search");
         var parameters = GetNameValueCollectionByParameters(fields, locationName, limit);
-        parameters.Add("location", location);
+        if (lat != 0 || lon != 0)
+            parameters.Add("location", $"{lat},{lon}");
         uriBuilder.Query = parameters.ToString();
         var request = new HttpRequestMessage(HttpMethod.Get, uriBuilder.Uri);
         var httpResponseMessage = await _httpClient.SendAsync(request);

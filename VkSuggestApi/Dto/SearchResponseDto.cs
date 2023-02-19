@@ -2,7 +2,7 @@
 
 namespace WebApplication1.Dto;
 
-public class SearchResponseDto
+public class SearchResponseDto : BaseResponseDto
 {
     public string Request { get; set; }
     

@@ -30,24 +30,12 @@ public class CachedSearchGeocodingVkMapsClient : ISearchGeocodingVkMapsClient
         return new HttpResponseMessage(tuple.Item1) { Content = new StringContent(tuple.Item2) };
     }
 
-    public async Task<HttpResponseMessage> PlacesAsync(string[] fields, string location, string locationName, int limit)
+    public Task<HttpResponseMessage> PlacesAsync(string[] fields, double lat, double lon, string locationName, int limit)
     {
-        var key = $"{string.Join(',', fields)}-{location}-{limit}";
-        if (!_memoryCache.TryGetValue(key, out Tuple<HttpStatusCode, string> tuple))
-        {
-            var response = await _client.PlacesAsync(fields, location, locationName, limit);
-            var content = await response.Content.ReadAsStringAsync();
-            tuple = Tuple.Create(response.StatusCode, content);
-            _memoryCache.Set(key, tuple, new MemoryCacheEntryOptions
-            {
-                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(1)
-            });
-        }
-
-        return new HttpResponseMessage(tuple.Item1) { Content = new StringContent(tuple.Item2) };
+        throw new NotImplementedException();
     }
 
-    public Task<HttpResponseMessage> SearchAsync(string[] fields, string location, string locationName, int limit)
+    public Task<HttpResponseMessage> SearchAsync(string[] fields, double lat, double lon, string locationName, int limit)
     {
         throw new NotImplementedException();
     }

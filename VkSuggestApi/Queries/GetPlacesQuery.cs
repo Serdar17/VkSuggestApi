@@ -15,13 +15,12 @@ public class GetPlacesQuery : IRequest<BaseResponseDto>
     
     [DefaultValue("address,name")] 
     public List<string> Fields { get; set; } = new() { "address", "name" };
-
-    [DefaultValue("")] 
-    public string Location { get; set; } = String.Empty;
+    
+    public Coordinate Coordinate { get; set; }
 
     public override string ToString()
     {
-        return $"{Limit}-{LocationName}-{Location}-{String.Join(',', Fields)}";
+        return $"{Limit}-{LocationName}-{Coordinate.Lat}-{Coordinate.Lon}-{String.Join(',', Fields)}";
     }
 }
 

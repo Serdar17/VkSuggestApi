@@ -34,7 +34,8 @@ public class SearchGeocodingVkMapsService : ISearchGeocodingVkMapsService
     {
         try
         {
-            var response = await _client.PlacesAsync(query.Fields.ToArray(), query.Location, query.LocationName, query.Limit);
+            var response = await _client.PlacesAsync(query.Fields.ToArray(), query.Coordinate.Lat, query.Coordinate.Lon,
+                query.LocationName, query.Limit);
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadFromJsonAsync<PlacesResponseDto>();
         }
@@ -51,9 +52,10 @@ public class SearchGeocodingVkMapsService : ISearchGeocodingVkMapsService
     {
         try
         {
-            var response = await _client.SearchAsync(query.Fields.ToArray(), query.Location, query.LocationName, query.Limit);
+            var response = await _client.SearchAsync(query.Fields.ToArray(), query.Coordinate.Lat, query.Coordinate.Lon,
+                query.LocationName, query.Limit);
             response.EnsureSuccessStatusCode();
-            return await response.Content.ReadFromJsonAsync<PlacesResponseDto>();
+            return await response.Content.ReadFromJsonAsync<SearchResponseDto>();
         }
         catch (HttpRequestException e)
         {
