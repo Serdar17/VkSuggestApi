@@ -1,7 +1,5 @@
 ﻿using System.Net;
 using Microsoft.Extensions.Caching.Memory;
-using WebApplication1.Queries;
-
 namespace WebApplication1.Infrastructure.VkMaps.Client;
 
 public class CachedSearchGeocodingVkMapsClient : ISearchGeocodingVkMapsClient
@@ -15,12 +13,12 @@ public class CachedSearchGeocodingVkMapsClient : ISearchGeocodingVkMapsClient
         _client = client;
     }
 
-    public async Task<HttpResponseMessage> SuggestAsync(GetSuggestQuery query)
+    public async Task<HttpResponseMessage> SuggestAsync(string[] fields, string location, int limit)
     {
-        var key = $"{query.Location}-{query.Limit}";
+        var key = $"{string.Join(',', fields)}-{location}-{limit}";
         if (!_memoryCache.TryGetValue(key, out Tuple<HttpStatusCode, string> tuple))
         {
-            var response = await _client.SuggestAsync(query);
+            var response = await _client.SuggestAsync(fields, location, limit);
             var content = await response.Content.ReadAsStringAsync();
             tuple = Tuple.Create(response.StatusCode, content);
             _memoryCache.Set(key, tuple, new MemoryCacheEntryOptions
@@ -30,5 +28,27 @@ public class CachedSearchGeocodingVkMapsClient : ISearchGeocodingVkMapsClient
         }
 
         return new HttpResponseMessage(tuple.Item1) { Content = new StringContent(tuple.Item2) };
+    }
+
+    public async Task<HttpResponseMessage> PlacesAsync(string[] fields, string location, string locationName, int limit)
+    {
+        var key = $"{string.Join(',', fields)}-{location}-{limit}";
+        if (!_memoryCache.TryGetValue(key, out Tuple<HttpStatusCode, string> tuple))
+        {
+            var response = await _client.PlacesAsync(fields, location, locationName, limit);
+            var content = await response.Content.ReadAsStringAsync();
+            tuple = Tuple.Create(response.StatusCode, content);
+            _memoryCache.Set(key, tuple, new MemoryCacheEntryOptions
+            {
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(1)
+            });
+        }
+
+        return new HttpResponseMessage(tuple.Item1) { Content = new StringContent(tuple.Item2) };
+    }
+
+    public Task<HttpResponseMessage> SearchAsync(string[] fields, string location, string locationName, int limit)
+    {
+        throw new NotImplementedException();
     }
 }

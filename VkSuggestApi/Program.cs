@@ -16,14 +16,14 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IInterestAddressService, InterestAddressService>();
-builder.Services.AddScoped<ISearchGeocodingVkMapsService, SearchGeocodingVkMapsService>();
 
 builder.Services.Configure<VkApiSetting>(builder.Configuration.GetSection(VkApiSetting.Section));
 builder.Services.AddHttpClient<ISearchGeocodingVkMapsClient, SearchGeocodingVkMapsClient>()
     .SetHandlerLifetime(TimeSpan.FromMinutes(5))
     .AddPolicyHandler(RetryPolicy.GetRetryPolicy());
 
-builder.Services.Decorate<ISearchGeocodingVkMapsClient, CachedSearchGeocodingVkMapsClient>();
+builder.Services.AddScoped<ISearchGeocodingVkMapsService, SearchGeocodingVkMapsService>();
+builder.Services.Decorate<ISearchGeocodingVkMapsService, CachedSearchGeocodingVkMapsService>();
 
 builder.Services.AddMediatR(typeof(Program));
 builder.Services.AddMemoryCache();

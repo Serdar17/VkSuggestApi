@@ -18,4 +18,14 @@ public class InterestAddressService : IInterestAddressService
     {
         return await _vkMapsService.Suggest(query);
     }
+
+    public async Task<BaseResponseDto> PlacesAsync(GetPlacesQuery query)
+    {
+        return await _vkMapsService.Places(query);
+    }
+
+    public async Task<BaseResponseDto> SearchAsync(GetSearchQuery query)
+    {
+        return await _vkMapsService.Search(query);
+    }
 }

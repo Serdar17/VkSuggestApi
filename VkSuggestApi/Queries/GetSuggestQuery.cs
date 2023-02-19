@@ -8,12 +8,18 @@ namespace WebApplication1.Queries;
 
 public class GetSuggestQuery : IRequest<BaseResponseDto>
 {
-    [FromQuery] 
     [DefaultValue(5)]
     public int Limit { get; set; } = 5;
     
-    [FromQuery]
     public string Location { get; set; }
+    
+    [DefaultValue("address,name")] 
+    public List<string> Fields { get; set; } = new() { "address", "name" };
+
+    public override string ToString()
+    {
+        return $"{Limit}-{Location}-{String.Join(',', Fields)}";
+    }
 }
 
 public class GetSuggestQueryHandler : IRequestHandler<GetSuggestQuery, BaseResponseDto>
