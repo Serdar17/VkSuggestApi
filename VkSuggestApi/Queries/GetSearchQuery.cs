@@ -12,16 +12,16 @@ public class GetSearchQuery : IRequest<BaseResponseDto>
     public int Limit { get; set; } = 2;
     
     [DefaultValue("")]
-    public string LocationName { get; set;} = String.Empty; 
+    public string Location { get; set;} = String.Empty; 
     
-    [DefaultValue("address_details,pin")] 
+    [DefaultValue("address_details,pin")]
     public List<string> Fields { get; set; } = new() { "address_details", "pin" };
     
     public Coordinate Coordinate { get; set; }
 
     public override string ToString()
     {
-        return $"{Limit}-{LocationName}-{Coordinate.Lat}-{Coordinate.Lon}-{String.Join(',', Fields)}";
+        return $"{Limit}-{Location}-{Coordinate.Lat}-{Coordinate.Lon}-{String.Join(',', Fields)}";
     }
 }
 

@@ -11,7 +11,7 @@ public class GetPlacesQuery : IRequest<BaseResponseDto>
     public int Limit { get; set; } = 2;
     
     [DefaultValue("")]
-    public string LocationName { get; set;} = String.Empty; 
+    public string Location { get; set;} = String.Empty; 
     
     [DefaultValue("address,name")] 
     public List<string> Fields { get; set; } = new() { "address", "name" };
@@ -20,7 +20,7 @@ public class GetPlacesQuery : IRequest<BaseResponseDto>
 
     public override string ToString()
     {
-        return $"{Limit}-{LocationName}-{Coordinate.Lat}-{Coordinate.Lon}-{String.Join(',', Fields)}";
+        return $"{Limit}-{Location}-{Coordinate.Lat}-{Coordinate.Lon}-{String.Join(',', Fields)}";
     }
 }
 

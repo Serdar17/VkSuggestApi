@@ -1,4 +1,5 @@
 ﻿using System.Collections.Specialized;
+using System.Net;
 using System.Web;
 using Microsoft.Extensions.Options;
 using WebApplication1.Options;
@@ -8,9 +9,9 @@ namespace WebApplication1.Infrastructure.VkMaps.Client;
 public class SearchGeocodingVkMapsClient : ISearchGeocodingVkMapsClient
 {
     private readonly HttpClient _httpClient;
-    private readonly VkApiSetting _apiSetting;
+    private readonly VkMapsApiSetting _apiSetting;
 
-    public SearchGeocodingVkMapsClient(HttpClient httpClient, IOptions<VkApiSetting> options)
+    public SearchGeocodingVkMapsClient(HttpClient httpClient, IOptions<VkMapsApiSetting> options)
     {
         _httpClient = httpClient;
         _apiSetting = options.Value;

@@ -1,4 +1,5 @@
-﻿using WebApplication1.Dto;
+﻿using Ardalis.Result;
+using WebApplication1.Dto;
 using WebApplication1.Infrastructure.VkMaps.Client;
 using WebApplication1.Queries;
 
@@ -13,56 +14,45 @@ public class SearchGeocodingVkMapsService : ISearchGeocodingVkMapsService
         _client = client;
     }
     
-    public async Task<BaseResponseDto> Suggest(GetSuggestQuery query)
+    public async Task<Result<SuccessResponse>> Suggest(GetSuggestQuery query)
     {
-        try
-        {
-            var response = await _client.SuggestAsync(query.Fields.ToArray(), query.Location, query.Limit);
-            response.EnsureSuccessStatusCode();
-            return await response.Content.ReadFromJsonAsync<SuggestResponse>();
-        }
-        catch (HttpRequestException e)
-        {
-            return new ErrorResponseDto()
-            {
-                ErrorMessage = e.Message
-            };
-        }
+        var response = await _client.SuggestAsync(query.Fields.ToArray(), query.Location, query.Limit);
+        var result = await ParseResponse<SuccessResponse>(response);
+        return result;
     }
 
-    public async Task<BaseResponseDto> Places(GetPlacesQuery query)
+    public async Task<Result<SuccessResponse>> Places(GetPlacesQuery query)
     {
-        try
-        {
-            var response = await _client.PlacesAsync(query.Fields.ToArray(), query.Coordinate.Lat, query.Coordinate.Lon,
-                query.LocationName, query.Limit);
-            response.EnsureSuccessStatusCode();
-            return await response.Content.ReadFromJsonAsync<PlacesResponseDto>();
-        }
-        catch (HttpRequestException e)
-        {
-            return new ErrorResponseDto()
-            {
-                ErrorMessage = e.Message
-            };
-        }
+        var response = await _client.PlacesAsync(query.Fields.ToArray(), query.Coordinate.Lat, query.Coordinate.Lon,
+            query.Location, query.Limit);
+        var result = await ParseResponse<SuccessResponse>(response);
+        return result;
     }
 
-    public async Task<BaseResponseDto> Search(GetSearchQuery query)
+    public async Task<Result<SuccessResponse>> Search(GetSearchQuery query)
+    {
+        var response = await _client.SearchAsync(query.Fields.ToArray(), query.Coordinate.Lat, query.Coordinate.Lon,
+            query.Location, query.Limit);
+        var result = await ParseResponse<SuccessResponse>(response);
+        return result;
+    }
+
+    private async Task<Result<TResponse>> ParseResponse<TResponse>(HttpResponseMessage response)
+        where TResponse : BaseResponseDto
     {
         try
         {
-            var response = await _client.SearchAsync(query.Fields.ToArray(), query.Coordinate.Lat, query.Coordinate.Lon,
-                query.LocationName, query.Limit);
             response.EnsureSuccessStatusCode();
-            return await response.Content.ReadFromJsonAsync<SearchResponseDto>();
+            var successResponse = await response.Content.ReadFromJsonAsync<TResponse>();
+            return Result.Success(successResponse);
         }
         catch (HttpRequestException e)
         {
-            return new ErrorResponseDto()
+            var errorResponse =  new ErrorResponseDto()
             {
                 ErrorMessage = e.Message
             };
+            return Result.Error(errorResponse.ErrorMessage);
         }
     }
 }

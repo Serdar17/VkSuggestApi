@@ -6,5 +6,5 @@ public class PlacesResponseDto : BaseResponseDto
 {
     public string Request { get; set; }
 
-    public List<LocationInfo> Results { get; set; }
+    public List<Location> Results { get; set; }
 }

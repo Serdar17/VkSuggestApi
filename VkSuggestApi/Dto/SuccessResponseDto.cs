@@ -1,9 +1,8 @@
-﻿using System.Text.Json.Serialization;
-using WebApplication1.Dto.Entities;
+﻿using WebApplication1.Dto.Entities;
 
 namespace WebApplication1.Dto;
 
-public class SuggestResponse : BaseResponseDto
+public class SuccessResponse : BaseResponseDto
 {
     /// <summary>
     /// Строка запроса
@@ -13,6 +12,5 @@ public class SuggestResponse : BaseResponseDto
     /// <summary>
     /// Список с найденными локациями
     /// </summary>
-    [JsonPropertyName("results")]
-    public List<Location> Locations { get; set; }
+    public List<Location> Results { get; set; }
 }

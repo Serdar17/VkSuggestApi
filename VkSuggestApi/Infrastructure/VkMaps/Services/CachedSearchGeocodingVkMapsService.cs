@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Caching.Memory;
+﻿using Ardalis.Result;
+using Microsoft.Extensions.Caching.Memory;
 using WebApplication1.Dto;
 using WebApplication1.Helper;
 using WebApplication1.Queries;
@@ -16,7 +17,7 @@ public class CachedSearchGeocodingVkMapsService : ISearchGeocodingVkMapsService
         _memoryCache = cache;
     }
 
-    public async Task<BaseResponseDto?> Suggest(GetSuggestQuery query)
+    public async Task<Result<SuccessResponse>?> Suggest(GetSuggestQuery query)
     {
         var cacheKey = new CacheKeyHelper("VkSuggestApi/InterestAddress/CachedSearchGeocodingVkMaps/Suggest",
             query);
@@ -27,7 +28,7 @@ public class CachedSearchGeocodingVkMapsService : ISearchGeocodingVkMapsService
         });
     }
 
-    public async Task<BaseResponseDto?> Places(GetPlacesQuery query)
+    public async Task<Result<SuccessResponse>?> Places(GetPlacesQuery query)
     {
         var cacheKey = new CacheKeyHelper("VkSuggestApi/InterestAddress/CachedSearchGeocodingVkMaps/Places",
             query.Fields);
@@ -38,7 +39,7 @@ public class CachedSearchGeocodingVkMapsService : ISearchGeocodingVkMapsService
         });
     }
 
-    public async Task<BaseResponseDto?> Search(GetSearchQuery query)
+    public async Task<Result<SuccessResponse>?> Search(GetSearchQuery query)
     {
         var cacheKey = new CacheKeyHelper("VkSuggestApi/InterestAddress/CachedSearchGeocodingVkMaps/Search",
             query);

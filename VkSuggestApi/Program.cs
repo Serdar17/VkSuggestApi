@@ -17,7 +17,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IInterestAddressService, InterestAddressService>();
 
-builder.Services.Configure<VkApiSetting>(builder.Configuration.GetSection(VkApiSetting.Section));
+builder.Services.Configure<VkMapsApiSetting>(builder.Configuration.GetSection(VkMapsApiSetting.Section));
 builder.Services.AddHttpClient<ISearchGeocodingVkMapsClient, SearchGeocodingVkMapsClient>()
     .SetHandlerLifetime(TimeSpan.FromMinutes(5))
     .AddPolicyHandler(RetryPolicy.GetRetryPolicy());

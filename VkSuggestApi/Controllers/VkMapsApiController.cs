@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Ardalis.Result.AspNetCore;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using WebApplication1.Dto;
 using WebApplication1.Queries;
@@ -24,14 +25,15 @@ public class VkMapsApiController : ControllerBase
     /// <param name="limit">Число объектов в моделе</param>
     /// <param name="suggest">Тело поискового запроса</param>
     /// <returns>Возвращает объект ResponseDto с данными об аддресам и местам интереса</returns>
+    [TranslateResultToActionResult]
     [HttpGet("suggest")]
-    [ProducesResponseType(typeof(SuggestResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(SuccessResponse), StatusCodes.Status200OK)]
     [Produces("application/json")]
     public async Task<IActionResult> Suggest([FromQuery] GetSuggestQuery query)
     {
         var response = await _mediator.Send(query);
-        if (response is ErrorResponseDto errorResponse)
-            return new BadRequestObjectResult(errorResponse);
+        if (response is null)
+            return new BadRequestResult();
         
         _logger.LogInformation("Requested addresses and places of interest for {Location} in quantity" +
                                " {Limit}. The response is {@response} ", 
@@ -46,12 +48,12 @@ public class VkMapsApiController : ControllerBase
     public async Task<IActionResult> Places([FromQuery] GetPlacesQuery query)
     {
         var response = await _mediator.Send(query);
-        if (response is ErrorResponseDto errorResponse)
-            return new BadRequestObjectResult(errorResponse);
+        if (response is null)
+            return new BadRequestResult();
         
         _logger.LogInformation("Requested places and additional information for {Location} in quantity" +
                                " {Limit}. The response is {@response} ", 
-            query.LocationName, query.Limit, response);
+            query.Location, query.Limit, response);
         
         return new JsonResult(response);
     }
@@ -62,12 +64,12 @@ public class VkMapsApiController : ControllerBase
     public async Task<IActionResult> Search([FromQuery] GetSearchQuery query)
     {
         var response = await _mediator.Send(query);
-        if (response is ErrorResponseDto errorResponse)
-            return new BadRequestObjectResult(errorResponse);
+        if (response is null)
+            return new BadRequestResult();
         
         _logger.LogInformation("Requested geocoding for {Location} in quantity" +
                                " {Limit}. The response is {@response} ", 
-            query.LocationName, query.Limit, response);
+            query.Location, query.Limit, response);
         
         return new JsonResult(response);
     }

@@ -13,8 +13,8 @@ public class Location
     /// <summary>
     /// Детальная информация о найденном адресе
     /// </summary>
-    [JsonPropertyName("address_details")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    [JsonPropertyName("address_details")]
     public AddressDetail AddressDetail { get; set; }
     
     /// <summary>
@@ -22,6 +22,18 @@ public class Location
     /// </summary>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string Name { get; set; }
+    
+    /// <summary>
+    /// Границы местонахождения найденного объекта для позиционирования на карте
+    /// </summary>
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public List<double> Bbox { get; set; }
+    
+    /// <summary>
+    /// Геометрия найденного объекта
+    /// </summary>
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public Geometry Geometry { get; set; }
     
     /// <summary>
     /// Тип найденного объекта
@@ -34,4 +46,16 @@ public class Location
     /// </summary>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string Ref { get; set; }
+    
+    /// <summary>
+    /// Информация о входах в здание.
+    /// </summary>
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public Entrance Entrance { get; set; }
+
+    /// <summary>
+    /// Координаты найденного объекта (долгота и широта)
+    /// </summary>
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public List<double> Pin { get; set; }
 }
