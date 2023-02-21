@@ -1,7 +1,9 @@
 ﻿using Ardalis.Result;
 using Microsoft.Extensions.Caching.Memory;
 using WebApplication1.Application.Helpers;
-using WebApplication1.Application.Queries;
+using WebApplication1.Application.Queries.GetPlacesQuery;
+using WebApplication1.Application.Queries.GetSearchQuery;
+using WebApplication1.Application.Queries.GetSuggestQuery;
 using WebApplication1.Dto;
 
 namespace WebApplication1.Infrastructure.VkMaps.Services;

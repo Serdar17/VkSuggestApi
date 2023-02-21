@@ -1,5 +1,7 @@
 ﻿using Ardalis.Result;
-using WebApplication1.Application.Queries;
+using WebApplication1.Application.Queries.GetPlacesQuery;
+using WebApplication1.Application.Queries.GetSearchQuery;
+using WebApplication1.Application.Queries.GetSuggestQuery;
 using WebApplication1.Dto;
 
 namespace WebApplication1.Application.Interfaces;
