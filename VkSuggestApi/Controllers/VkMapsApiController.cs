@@ -1,8 +1,9 @@
-﻿using Ardalis.Result.AspNetCore;
+﻿using Ardalis.Result;
+using Ardalis.Result.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using WebApplication1.Application.Queries;
 using WebApplication1.Dto;
-using WebApplication1.Queries;
 
 namespace WebApplication1.Controllers;
 
@@ -28,49 +29,48 @@ public class VkMapsApiController : ControllerBase
     [TranslateResultToActionResult]
     [HttpGet("suggest")]
     [ProducesResponseType(typeof(SuccessResponse), StatusCodes.Status200OK)]
-    [Produces("application/json")]
-    public async Task<IActionResult> Suggest([FromQuery] GetSuggestQuery query)
+    public async Task<Result<SuccessResponse>> Suggest([FromQuery] GetSuggestQuery query)
     {
         var response = await _mediator.Send(query);
         if (response is null)
-            return new BadRequestResult();
+            return Result<SuccessResponse>.NotFound();
         
         _logger.LogInformation("Requested addresses and places of interest for {Location} in quantity" +
                                " {Limit}. The response is {@response} ", 
             query.Location, query.Limit, response);
         
-        return new JsonResult(response);
+        return response;
     }
     
+    [TranslateResultToActionResult]
     [HttpGet("places")]
-    [ProducesResponseType(typeof(PlacesResponseDto), StatusCodes.Status200OK)]
-    [Produces("application/json")]
-    public async Task<IActionResult> Places([FromQuery] GetPlacesQuery query)
+    [ProducesResponseType(typeof(SuccessResponse), StatusCodes.Status200OK)]
+    public async Task<Result<SuccessResponse>> Places([FromQuery] GetPlacesQuery query)
     {
         var response = await _mediator.Send(query);
         if (response is null)
-            return new BadRequestResult();
+            return Result<SuccessResponse>.NotFound();
         
         _logger.LogInformation("Requested places and additional information for {Location} in quantity" +
                                " {Limit}. The response is {@response} ", 
             query.Location, query.Limit, response);
         
-        return new JsonResult(response);
+        return response;
     }
     
+    [TranslateResultToActionResult]
     [HttpGet("search")]
-    [ProducesResponseType(typeof(SearchResponseDto), StatusCodes.Status200OK)]
-    [Produces("application/json")]
-    public async Task<IActionResult> Search([FromQuery] GetSearchQuery query)
+    [ProducesResponseType(typeof(SuccessResponse), StatusCodes.Status200OK)]
+    public async Task<Result<SuccessResponse>> Search([FromQuery] GetSearchQuery query)
     {
         var response = await _mediator.Send(query);
         if (response is null)
-            return new BadRequestResult();
+            return Result<SuccessResponse>.NotFound();
         
         _logger.LogInformation("Requested geocoding for {Location} in quantity" +
                                " {Limit}. The response is {@response} ", 
             query.Location, query.Limit, response);
         
-        return new JsonResult(response);
+        return response;
     }
 }

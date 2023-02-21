@@ -1,11 +1,12 @@
 ﻿using System.ComponentModel;
+using Ardalis.Result;
 using MediatR;
 using WebApplication1.Application.Interfaces;
 using WebApplication1.Dto;
 
-namespace WebApplication1.Queries;
+namespace WebApplication1.Application.Queries;
 
-public class GetPlacesQuery : IRequest<BaseResponseDto>
+public class GetPlacesQuery : IRequest<Result<SuccessResponse>>
 {
     [DefaultValue(2)] 
     public int Limit { get; set; } = 2;
@@ -24,7 +25,7 @@ public class GetPlacesQuery : IRequest<BaseResponseDto>
     }
 }
 
-public class GetPlacesQueryHandler : IRequestHandler<GetPlacesQuery, BaseResponseDto>
+public class GetPlacesQueryHandler : IRequestHandler<GetPlacesQuery, Result<SuccessResponse>>
 {
     private readonly IInterestAddressService _service;
 
@@ -33,7 +34,7 @@ public class GetPlacesQueryHandler : IRequestHandler<GetPlacesQuery, BaseRespons
         _service = service;
     }
     
-    public async Task<BaseResponseDto> Handle(GetPlacesQuery query, CancellationToken cancellationToken)
+    public async Task<Result<SuccessResponse>> Handle(GetPlacesQuery query, CancellationToken cancellationToken)
     {
         return await _service.PlacesAsync(query);
     }

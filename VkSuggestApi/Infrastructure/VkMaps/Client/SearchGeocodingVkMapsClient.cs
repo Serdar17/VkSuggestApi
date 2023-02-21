@@ -1,5 +1,4 @@
 ﻿using System.Collections.Specialized;
-using System.Net;
 using System.Web;
 using Microsoft.Extensions.Options;
 using WebApplication1.Options;
@@ -19,7 +18,7 @@ public class SearchGeocodingVkMapsClient : ISearchGeocodingVkMapsClient
 
     public async Task<HttpResponseMessage> SuggestAsync(string[] fields, string location, int limit)
     {
-        var uriBuilder = new UriBuilder($"{_apiSetting.BaseUrl}/suggest");
+        var uriBuilder = new UriBuilder($"{_apiSetting.BaseUrl}/{_apiSetting.PathToSuggest}");
         var parameters = GetNameValueCollectionByParameters(fields, location, limit);
         uriBuilder.Query = parameters.ToString();
         var request = new HttpRequestMessage(HttpMethod.Get, uriBuilder.Uri);
@@ -29,7 +28,7 @@ public class SearchGeocodingVkMapsClient : ISearchGeocodingVkMapsClient
 
     public async Task<HttpResponseMessage> PlacesAsync(string[] fields, double lat, double lon, string locationName, int limit)
     {
-        var uriBuilder = new UriBuilder($"{_apiSetting.BaseUrl}/places");
+        var uriBuilder = new UriBuilder($"{_apiSetting.BaseUrl}/{_apiSetting.PathToPlaces}");
         var parameters = GetNameValueCollectionByParameters(fields, locationName, limit);
         if (lat != 0 || lon != 0)
             parameters.Add("location", $"{lat},{lon}");
@@ -41,7 +40,7 @@ public class SearchGeocodingVkMapsClient : ISearchGeocodingVkMapsClient
 
     public async Task<HttpResponseMessage> SearchAsync(string[] fields, double lat, double lon, string locationName, int limit)
     {
-        var uriBuilder = new UriBuilder($"{_apiSetting.BaseUrl}/search");
+        var uriBuilder = new UriBuilder($"{_apiSetting.BaseUrl}/{_apiSetting.PathToSearch}");
         var parameters = GetNameValueCollectionByParameters(fields, locationName, limit);
         if (lat != 0 || lon != 0)
             parameters.Add("location", $"{lat},{lon}");

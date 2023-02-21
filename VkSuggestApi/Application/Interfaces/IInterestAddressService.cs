@@ -1,6 +1,6 @@
 ﻿using Ardalis.Result;
+using WebApplication1.Application.Queries;
 using WebApplication1.Dto;
-using WebApplication1.Queries;
 
 namespace WebApplication1.Application.Interfaces;
 

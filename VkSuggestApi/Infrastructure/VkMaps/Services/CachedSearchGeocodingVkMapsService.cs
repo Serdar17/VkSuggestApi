@@ -1,8 +1,8 @@
 ﻿using Ardalis.Result;
 using Microsoft.Extensions.Caching.Memory;
+using WebApplication1.Application.Helpers;
+using WebApplication1.Application.Queries;
 using WebApplication1.Dto;
-using WebApplication1.Helper;
-using WebApplication1.Queries;
 
 namespace WebApplication1.Infrastructure.VkMaps.Services;
 
@@ -17,36 +17,33 @@ public class CachedSearchGeocodingVkMapsService : ISearchGeocodingVkMapsService
         _memoryCache = cache;
     }
 
-    public async Task<Result<SuccessResponse>?> Suggest(GetSuggestQuery query)
+    public async Task<Result<SuccessResponse>> Suggest(GetSuggestQuery query)
     {
-        var cacheKey = new CacheKeyHelper("VkSuggestApi/InterestAddress/CachedSearchGeocodingVkMaps/Suggest",
-            query);
-        return await _memoryCache.GetOrCreateAsync(cacheKey.GetUniqueKeyAsString(), async entry =>
+        var cacheKey = CacheKeyHelper.GetUniqueKeyAsString(PathByMethods.PathToSuggest, query);
+        return (await _memoryCache.GetOrCreateAsync(cacheKey, async entry =>
         {
             entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(1);
             return await _service.Suggest(query);
-        });
+        }))!;
     }
 
-    public async Task<Result<SuccessResponse>?> Places(GetPlacesQuery query)
+    public async Task<Result<SuccessResponse>> Places(GetPlacesQuery query)
     {
-        var cacheKey = new CacheKeyHelper("VkSuggestApi/InterestAddress/CachedSearchGeocodingVkMaps/Places",
-            query.Fields);
-        return await _memoryCache.GetOrCreateAsync(cacheKey.GetUniqueKeyAsString(), async entry =>
+        var cacheKey = CacheKeyHelper.GetUniqueKeyAsString(PathByMethods.PathToPlaces, query.Fields);
+        return (await _memoryCache.GetOrCreateAsync(cacheKey, async entry =>
         {
             entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(1);
             return await _service.Places(query);
-        });
+        }))!;
     }
 
-    public async Task<Result<SuccessResponse>?> Search(GetSearchQuery query)
+    public async Task<Result<SuccessResponse>> Search(GetSearchQuery query)
     {
-        var cacheKey = new CacheKeyHelper("VkSuggestApi/InterestAddress/CachedSearchGeocodingVkMaps/Search",
-            query);
-        return await _memoryCache.GetOrCreateAsync(cacheKey.GetUniqueKeyAsString(), async entry =>
+        var cacheKey = CacheKeyHelper.GetUniqueKeyAsString(PathByMethods.PathToSearch, query);
+        return (await _memoryCache.GetOrCreateAsync(cacheKey, async entry =>
         {
             entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(1);
             return await _service.Search(query);
-        });
+        }))!;
     }
 }

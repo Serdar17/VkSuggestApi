@@ -1,7 +1,7 @@
 ﻿using Ardalis.Result;
+using WebApplication1.Application.Queries;
 using WebApplication1.Dto;
 using WebApplication1.Infrastructure.VkMaps.Client;
-using WebApplication1.Queries;
 
 namespace WebApplication1.Infrastructure.VkMaps.Services;
 
@@ -38,7 +38,7 @@ public class SearchGeocodingVkMapsService : ISearchGeocodingVkMapsService
     }
 
     private async Task<Result<TResponse>> ParseResponse<TResponse>(HttpResponseMessage response)
-        where TResponse : BaseResponseDto
+        where TResponse : BaseResponse
     {
         try
         {
@@ -48,7 +48,7 @@ public class SearchGeocodingVkMapsService : ISearchGeocodingVkMapsService
         }
         catch (HttpRequestException e)
         {
-            var errorResponse =  new ErrorResponseDto()
+            var errorResponse =  new ErrorResponse()
             {
                 ErrorMessage = e.Message
             };

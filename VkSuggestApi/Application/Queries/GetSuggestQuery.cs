@@ -1,12 +1,12 @@
 ﻿using System.ComponentModel;
+using Ardalis.Result;
 using MediatR;
-using Microsoft.AspNetCore.Mvc;
 using WebApplication1.Application.Interfaces;
 using WebApplication1.Dto;
 
-namespace WebApplication1.Queries;
+namespace WebApplication1.Application.Queries;
 
-public class GetSuggestQuery : IRequest<BaseResponseDto>
+public class GetSuggestQuery : IRequest<Result<SuccessResponse>>
 {
     [DefaultValue(5)]
     public int Limit { get; set; } = 5;
@@ -22,7 +22,7 @@ public class GetSuggestQuery : IRequest<BaseResponseDto>
     }
 }
 
-public class GetSuggestQueryHandler : IRequestHandler<GetSuggestQuery, BaseResponseDto>
+public class GetSuggestQueryHandler : IRequestHandler<GetSuggestQuery, Result<SuccessResponse>>
 {
     private readonly IInterestAddressService _service;
 
@@ -31,7 +31,7 @@ public class GetSuggestQueryHandler : IRequestHandler<GetSuggestQuery, BaseRespo
         _service = service;
     }
     
-    public async Task<BaseResponseDto> Handle(GetSuggestQuery request, CancellationToken cancellationToken)
+    public async Task<Result<SuccessResponse>> Handle(GetSuggestQuery request, CancellationToken cancellationToken)
     {
         return await _service.SuggestAsync(request);
     }

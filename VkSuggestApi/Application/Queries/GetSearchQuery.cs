@@ -1,12 +1,13 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using Ardalis.Result;
 using MediatR;
 using WebApplication1.Application.Interfaces;
 using WebApplication1.Dto;
 
-namespace WebApplication1.Queries;
+namespace WebApplication1.Application.Queries;
 
-public class GetSearchQuery : IRequest<BaseResponseDto>
+public class GetSearchQuery : IRequest<Result<SuccessResponse>>
 {
     [DefaultValue(2)] 
     public int Limit { get; set; } = 2;
@@ -25,7 +26,7 @@ public class GetSearchQuery : IRequest<BaseResponseDto>
     }
 }
 
-public class GetSearchQueryHandler : IRequestHandler<GetSearchQuery, BaseResponseDto>
+public class GetSearchQueryHandler : IRequestHandler<GetSearchQuery, Result<SuccessResponse>>
 {
     private readonly IInterestAddressService _service;
 
@@ -34,7 +35,7 @@ public class GetSearchQueryHandler : IRequestHandler<GetSearchQuery, BaseRespons
         _service = service;
     }
     
-    public async Task<BaseResponseDto> Handle(GetSearchQuery query, CancellationToken cancellationToken)
+    public async Task<Result<SuccessResponse>> Handle(GetSearchQuery query, CancellationToken cancellationToken)
     {
         return await _service.SearchAsync(query);
     }
